@@ -3,7 +3,6 @@ const path = require('path');
 const fs = require('fs');
 const deployCommands = require('./deploy/deployCommands');
 const { Client, Collection, Events, GatewayIntentBits, REST, Routes } = require('discord.js');
-const getMeme = require('./commands/getMeme/getMeme');
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 
