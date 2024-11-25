@@ -7,7 +7,10 @@ const getMeme = require('./commands/getMeme/getMeme');
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 
-const client = new Client({ intents: [GatewayIntentBits.Guilds] });
+const client = new Client({ intents: [GatewayIntentBits.Guilds,
+	GatewayIntentBits.GuildMessages, 
+	GatewayIntentBits.MessageContent,
+	GatewayIntentBits.GuildMessageReactions] });
 
 client.commands = new Collection();
 
