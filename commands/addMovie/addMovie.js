@@ -13,10 +13,14 @@ module.exports = {
             return;
         }
         const info = await getMovieInfo(interaction);
+        if (!info) {
+            await interaction.reply('Movie not found');
+            return;
+        }
         interaction.reply('adding movie to watchlist');
-        const imdbLink = `https://www.imdb.com/title/${info.imdbID}`;
-        const msg = `**${info.Title}** (${info.Year})\n[IMDB](${imdbLink}) Rating: ${info.imdbRating}\n${info.Runtime}\n${info.Plot}`;
-        const embed = new EmbedBuilder().setDescription(msg).setImage(info.Poster);
+        const imdbLink = `https://www.imdb.com/title/${info.imdbID || "not found"}`;
+        const msg = `**${info.Title || "not found"}** (${info.Year || "not found"})\n[IMDB](${imdbLink}) Rating: ${info.imdbRating || "not found"}\n${info.Runtime || "not found"}\n${info.Plot || "not found"}`;
+        const embed = new EmbedBuilder().setDescription(msg).setImage(info.Poster || "not found");
         const movie = await watchlist.send({ embeds: [embed] });
         // add reactions
         await movie.react('🔥');
@@ -28,9 +32,9 @@ module.exports = {
 async function getMovieInfo(interaction) {
     const name = interaction.options.getString('name');
     const res = await axios.get(`https://www.omdbapi.com/?t=${name}&apikey=${process.env.OMDB_API_KEY}`);
-    if (res.data.Response === 'False') {
-        interaction.reply('Movie not found');
-        throw new Error('Movie not found');
+    if (res.data.Response === 'False' || res.data == null) {
+        console.error("Movie " + name + " not found")
+        return null;
     }
     return res.data;
 }
