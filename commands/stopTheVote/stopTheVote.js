@@ -72,39 +72,61 @@ async function calculateMovieScores(attendees, movies) {
             POOP: '💩'
         };
 
-        const scores = await Promise.all(movies.map(async movie => {
-            try {
-                const fireReactions = movie.reactions.cache.get(REACTIONS.FIRE);
-                const poopReactions = movie.reactions.cache.get(REACTIONS.POOP);
+        // Batch fetch all reaction users for all movies at once
+        const reactionPromises = [];
+        const movieReactionMap = new Map();
 
-                let fireCount = 0;
-                let poopCount = 0;
+        movies.forEach((movie, index) => {
+            const fireReactions = movie.reactions.cache.get(REACTIONS.FIRE);
+            const poopReactions = movie.reactions.cache.get(REACTIONS.POOP);
 
-                if (fireReactions?.count > 1) {
-                    const fireUsers = await fireReactions.users.fetch();
-                    fireCount = fireUsers.filter(user => attendees.includes(user.id)).size;
-                }
-
-                if (poopReactions?.count > 1) {
-                    const poopUsers = await poopReactions.users.fetch();
-                    poopCount = poopUsers.filter(user => attendees.includes(user.id)).size;
-                }
-
-                let name = 'Unknown Movie';
-                if (movie.embeds?.[0]?.data?.description) {
-                    name = movie.embeds[0].data.description.split('\n')[0];
-                }
-
-                return { name, score: fireCount - poopCount };
-            } catch (error) {
-                console.error('Error processing movie:', error);
-                return { name: 'Error Processing Movie', score: -999 };
+            if (fireReactions?.count > 1) {
+                const promise = fireReactions.users.fetch().then(users => ({
+                    type: 'fire',
+                    movieIndex: index,
+                    users: users.filter(user => attendees.includes(user.id))
+                }));
+                reactionPromises.push(promise);
             }
-        }));
 
-        return scores
-            .filter(movie => movie.score !== -999)
-            .sort((a, b) => b.score - a.score);
+            if (poopReactions?.count > 1) {
+                const promise = poopReactions.users.fetch().then(users => ({
+                    type: 'poop',
+                    movieIndex: index,
+                    users: users.filter(user => attendees.includes(user.id))
+                }));
+                reactionPromises.push(promise);
+            }
+        });
+
+        // Wait for all reaction fetches to complete
+        const reactionResults = await Promise.all(reactionPromises);
+
+        // Process results and calculate scores
+        const scores = movies.map((movie, index) => {
+            let fireCount = 0;
+            let poopCount = 0;
+
+            // Count reactions for this movie
+            reactionResults.forEach(result => {
+                if (result.movieIndex === index) {
+                    if (result.type === 'fire') {
+                        fireCount = result.users.size;
+                    } else if (result.type === 'poop') {
+                        poopCount = result.users.size;
+                    }
+                }
+            });
+
+            let name = 'Unknown Movie';
+            if (movie.embeds?.[0]?.data?.description) {
+                name = movie.embeds[0].data.description.split('\n')[0];
+            }
+
+            return { name, score: fireCount - poopCount };
+        });
+
+        return scores.sort((a, b) => b.score - a.score);
     } catch (error) {
         console.error('Error calculating movie scores:', error);
         return [];
