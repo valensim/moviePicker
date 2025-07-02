@@ -83,7 +83,13 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-const darmothNames = ['zlakurwica', 'milovník úvěrů', 'darmoth'];
+const names = {
+  zlakurwica: ['zlakurwica', 'milovník úvěrů', 'Darmoth'],
+  mlik0: ['the whole fokin spectrum', 'arctic goblin', 'milovnik Vina Diesla', 'Mliko'],
+  jory4619: ['Jory'],
+  airsaltychips: ['Zdena', 'Mrazek'],
+  johnythered: ['Anan', 'Johny']
+}
 // Handle replies to specific users
 client.on(Events.MessageCreate, async (message) => {
   // Ignore messages from bots (including itself)
@@ -91,32 +97,16 @@ client.on(Events.MessageCreate, async (message) => {
 
   const username = message.author.username.toLowerCase();
 
-  if (username === 'zlakurwica') {
+  if (Math.random() < 0.5) {
     const ironicMessage = ironic(message.content);
     const channel = message.channel;
     await message.delete();
-    const name = darmothNames[Math.floor(Math.random() * darmothNames.length)];
+    const name = names[username] ? names[username][Math.floor(Math.random() * names[username].length)] : username
     await channel.send( name + ' tried to yap: \n' + ironicMessage);
     return;
   }
 
   return;
-  
-  // Check if this user has custom responses
-  // for (const [user, responses] of Object.entries(userResponses)) {
-  //   if (username.includes(user.toLowerCase())) {
-  //     // Pick a random response from the user's response array
-  //     const randomResponse = responses[Math.floor(Math.random() * responses.length)];
-      
-  //     try {
-  //       await message.reply(randomResponse);
-  //       console.log(`Replied to ${message.author.username}: "${randomResponse}"`);
-  //     } catch (error) {
-  //       console.error('Error replying to user message:', error);
-  //     }
-  //     break; // Only respond once per message
-  //   }
-  // }
 });
 
 client.login(BOT_TOKEN);
