@@ -97,7 +97,7 @@ client.on(Events.MessageCreate, async (message) => {
 
   const username = message.author.username.toLowerCase();
 
-  if (Math.random() < 0.5) {
+  if (Math.random() < 0.069) {
     const ironicMessage = ironic(message.content);
     const channel = message.channel;
     
