@@ -100,9 +100,26 @@ client.on(Events.MessageCreate, async (message) => {
   if (Math.random() < 0.5) {
     const ironicMessage = ironic(message.content);
     const channel = message.channel;
+    
+    // Check if the original message was a reply and if the referenced message still exists
+    let replyToMessage = null;
+    if (message.reference?.messageId) {
+      try {
+        replyToMessage = await channel.messages.fetch(message.reference.messageId);
+      } catch (error) {
+        console.log('Referenced message not found, sending as regular message');
+      }
+    }
+    
     await message.delete();
     const name = names[username] ? names[username][Math.floor(Math.random() * names[username].length)] : username
-    await channel.send( name + ' tried to yap: \n' + ironicMessage);
+    const content = name + ' tried to yap: \n' + ironicMessage;
+    
+    if (replyToMessage) {
+      await replyToMessage.reply(content);
+    } else {
+      await channel.send(content);
+    }
     return;
   }
 
