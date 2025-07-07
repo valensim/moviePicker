@@ -90,12 +90,17 @@ const names = {
   airsaltychips: ['Zdena', 'Mrazek'],
   johnythered: ['Anan', 'Johny']
 }
-// Handle replies to specific users
 client.on(Events.MessageCreate, async (message) => {
   // Ignore messages from bots (including itself)
   if (message.author.bot) return;
 
   const username = message.author.username.toLowerCase();
+
+  // Check if message contains images (attachments or embeds with images)
+  const hasImages = message.attachments.size > 0 || 
+                   message.embeds.some(embed => embed.image || embed.thumbnail);
+
+  if (hasImages) return;
 
   if (Math.random() < 0.069) {
     const ironicMessage = ironic(message.content);
