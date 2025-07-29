@@ -1,18 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { CHANNELS } = require('../../config');
 
-//testing
-//const screeningChannel = 'screeningtest';
-//const watchlistChannel = 'backlog';
-
-//prod
-const screeningChannel = 'screening';
-const watchlistChannel = 'watch-list';
-
-// Move these to a config file later
-const CHANNELS = {
-    SCREENING: 'screening',
-    WATCHLIST: 'watch-list'
-};
 
 module.exports = {
 	data: new SlashCommandBuilder()

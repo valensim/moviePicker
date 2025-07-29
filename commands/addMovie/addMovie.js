@@ -1,5 +1,6 @@
 const { SlashCommandBuilder, EmbedBuilder } = require("discord.js");
 const axios = require("axios");
+const { CHANNELS } = require('../../config');
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -14,7 +15,7 @@ module.exports = {
   async execute(interaction) {
     try {
       const watchlist = interaction.guild.channels.cache.find(
-        (ch) => ch.name === "watch-list",
+        (ch) => ch.name === CHANNELS.WATCHLIST,
       );
       if (!watchlist) {
         await interaction.reply("No watchlist channel found");

@@ -1,4 +1,5 @@
 const { SlashCommandBuilder } = require('discord.js');
+const { CHANNELS } = require('../../config');
 
 
 module.exports = {
@@ -8,7 +9,7 @@ module.exports = {
 	async execute(interaction) {
 
         // Find the right channel
-        const screening = interaction.guild.channels.cache.find(ch => ch.name === 'screening');
+        const screening = interaction.guild.channels.cache.find(ch => ch.name === CHANNELS.SCREENING);
 
         const today = new Date().toLocaleDateString('cs-CZ'); 
         const messageContent = `@everyone Dorazim na dnesni promitani (${today})`;

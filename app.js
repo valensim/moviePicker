@@ -7,10 +7,9 @@ const {
   Collection,
   Events,
   GatewayIntentBits,
-  REST,
-  Routes,
 } = require("discord.js");
 const { ironic } = require("ironicase");
+const { NAMES } = require("./config");
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -83,13 +82,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-const names = {
-  zlakurwica: ['zlakurwica', 'milovník úvěrů', 'Darmoth'],
-  mlik0: ['the whole fokin spectrum', 'arctic goblin', 'milovnik Vina Diesla', 'Mliko'],
-  jory4619: ['Jory'],
-  airsaltychips: ['Zdena', 'Mrazek'],
-  johnythered: ['Anan', 'Johny']
-}
+
 client.on(Events.MessageCreate, async (message) => {
   // Ignore messages from bots (including itself)
   if (message.author.bot) return;
@@ -117,7 +110,7 @@ client.on(Events.MessageCreate, async (message) => {
     }
     
     await message.delete();
-    const name = names[username] ? names[username][Math.floor(Math.random() * names[username].length)] : username
+    const name = NAMES[username] ? NAMES[username][Math.floor(Math.random() * NAMES[username].length)] : username
     const content = name + ' tried to yap: \n' + ironicMessage;
     
     if (replyToMessage) {

@@ -40,6 +40,8 @@ const deploy = async () => {
                 Routes.applicationCommands(CLIENT_ID),
                 { body: commands }
             );
+
+            console.log(data);
     
             console.log(`Successfully reloaded ${data.length} application (/) commands.`);
         } catch (error) {
