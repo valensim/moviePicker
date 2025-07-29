@@ -5,10 +5,10 @@ module.exports = {
     WATCHLIST: 'watch-list',
     },
     NAMES: {
-        ZLAKURWICA: ['zlakurwica', 'milovník úvěrů', 'Darmoth'],
-        MLIKO: ['the whole fokin spectrum', 'arctic goblin', 'milovnik Vina Diesla', 'Mliko'],
-        JORY: ['Jory'],
-        AIRSALTYCHIPS: ['Zdena', 'Mrazek'],
-        JOHNYTHERED: ['Anan', 'Johny']
+        zlakurwica: ['zlakurwica', 'milovník úvěrů', 'Darmoth'],
+        mlik0: ['the whole fokin spectrum', 'arctic goblin', 'milovnik Vina Diesla', 'Mliko'],
+        jory4619: ['Jory'],
+        airsaltychips: ['Zdena', 'Mrazek'],
+        johnythered: ['Anan', 'Johny']
     }
 };

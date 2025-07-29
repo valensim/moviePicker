@@ -8,8 +8,7 @@ const {
   Events,
   GatewayIntentBits,
 } = require("discord.js");
-const { ironic } = require("ironicase");
-const { NAMES } = require("./config");
+const { jap } = require("./japper");
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -87,42 +86,17 @@ client.on(Events.MessageCreate, async (message) => {
   // Ignore messages from bots (including itself)
   if (message.author.bot) return;
 
-  const username = message.author.username.toLowerCase();
-
   // Check if message contains images (attachments or embeds with images)
   const hasImages = message.attachments.size > 0 || 
                    message.embeds.some(embed => embed.image || embed.thumbnail);
 
   if (hasImages) return;
 
-  if (Math.random() < 0.069) {
-    const ironicMessage = ironic(message.content);
-    const channel = message.channel;
-    
-    // Check if the original message was a reply and if the referenced message still exists
-    let replyToMessage = null;
-    if (message.reference?.messageId) {
-      try {
-        replyToMessage = await channel.messages.fetch(message.reference.messageId);
-      } catch (error) {
-        console.log('Referenced message not found, sending as regular message');
-      }
-    }
-    
-    await message.delete();
-    const name = NAMES[username] ? NAMES[username][Math.floor(Math.random() * NAMES[username].length)] : username
-    const content = name + ' tried to yap: \n' + ironicMessage;
-    
-    if (replyToMessage) {
-      await replyToMessage.reply(content);
-    } else {
-      await channel.send(content);
-    }
-    return;
-  }
+  const username = message.author.username.toLowerCase();
+
+  jap(message);
 
   return;
 });
 
 client.login(BOT_TOKEN);
-
