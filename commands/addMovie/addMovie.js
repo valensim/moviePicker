@@ -57,9 +57,17 @@ async function getMovieInfo(interaction) {
   try {
     const name = interaction.options.getString("name");
     const encodedName = encodeURIComponent(name);
-    const res = await axios.get(
-      `https://www.omdbapi.com/?t=${encodedName}&apikey=${process.env.OMDB_API_KEY}`,
-    );
+    const id = getImdbIdFromImdbLink(name);
+    let res;
+    if (id) {
+      res = await axios.get(
+        `https://www.omdbapi.com/?i=${id}&apikey=${process.env.OMDB_API_KEY}`,
+      )
+    } else {
+      res = await axios.get(
+        `https://www.omdbapi.com/?t=${encodedName}&apikey=${process.env.OMDB_API_KEY}`,
+      );
+    }
     if (res.data.Response === "False" || !res.data) {
       console.error("Movie not found:", name);
       return null;
@@ -69,4 +77,9 @@ async function getMovieInfo(interaction) {
     console.error("Error fetching movie info:", error);
     return null;
   }
+}
+
+function getImdbIdFromImdbLink(link) {
+  const match = link.match(/tt\d+/);
+  return match ? match[0] : null;
 }
