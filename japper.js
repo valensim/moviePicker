@@ -67,4 +67,4 @@ async function jap(message) {
     return;
 }
 
-module.exports = { jap };
+module.exports = { jap, getDb };
