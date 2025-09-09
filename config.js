@@ -10,6 +10,7 @@ module.exports = {
         jory4619: ['Jory', 'nEkAmArAd', 'the Rudler'],
         airsaltychips: ['Zdena', 'Mrazek'],
         johnythered: ['Anan', 'Johny'],
-        almorus: ['Almor', 'sestka enjoyer']
+        almorus: ['Almor', 'sestka enjoyer'],
+        a_n_e_z_k_a_29909: ['Corra', 'soulless']
     }
 };
