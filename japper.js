@@ -37,7 +37,7 @@ async function jap(message) {
     user.yap++
     const username = user.name.toLowerCase()
 
-    if (Math.random() < user.yap / 1000) {
+    if (Math.random() < user.yap / 2000) {
         const ironicMessage = ironic(message.content);
         const channel = message.channel;
 
