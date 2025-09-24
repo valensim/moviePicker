@@ -42,3 +42,4 @@ You will need a `.env` file with the following environment variables:
 - `/presence`: Starts a vote on the presence of the members.
 - `/back-fill`: Backfills the backlog with movies.
 - `/stop-the-vote`: Stops the vote and calculates the top movies.
+- `/jap-count`: Returns current jap count per user.
