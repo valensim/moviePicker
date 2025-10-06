@@ -11,6 +11,17 @@ function getDb() {
     return JSON.parse(fs.readFileSync(dbName))
 }
 
+async function updateScoreboard(userId, yapCount) {
+    const japIndex = getDb()
+    const currentHighScore = japIndex[userId]?.highScore || 0
+    
+    if (yapCount > currentHighScore) {
+        japIndex[userId].highScore = yapCount
+        fs.writeFileSync(dbName, JSON.stringify(japIndex, null, 2))
+    }
+    console.log(japIndex[userId])
+}
+
 function createDb(message) {
     const users = {};
     message.guild.members.cache.forEach(member => {
@@ -18,6 +29,7 @@ function createDb(message) {
             id: member.user.id,
             name: member.user.username,
             yap: 0,
+            highScore: 0,
         }
     });
     fs.writeFileSync(dbName, JSON.stringify(users, null, 2))
@@ -32,12 +44,15 @@ async function jap(message) {
             id: message.author.id,
             name: message.author.username,
             yap: 0,
+            highScore: 0,
         }
     }
     user.yap++
     const username = user.name.toLowerCase()
+    const isLink = message.content.includes('http' || 'www')
+    const isForwarded = message.messageSnapshots && message.messageSnapshots.size > 0
 
-    if (Math.random() < user.yap / 2000) {
+    if (Math.random() < user.yap / 2000 && !isLink && !isForwarded) {
         const ironicMessage = ironic(message.content);
         const channel = message.channel;
 
@@ -60,6 +75,13 @@ async function jap(message) {
         } else {
             await channel.send(content);
         }
+        
+        // Update scoreboard with the yap count before resetting
+        await updateScoreboard(user.id, user.yap);
+        
+        // Re-read the database to get the updated highScore
+        const updatedJapIndex = getDb();
+        user = updatedJapIndex[user.id];
         user.yap = 0
     }
     japIndex[user.id] = user
