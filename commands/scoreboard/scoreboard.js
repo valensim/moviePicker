@@ -16,7 +16,7 @@ module.exports = {
         // Convert to array and sort by high score descending
         const sortedScores = Object.values(scoreboard)
             .filter(user => user.name !== 'moviePicker')
-            .sort((a, b) => b.highScore - a.highScore);
+            .sort((a, b) => b.highScore || b.yap - a.highScore || a.yap);
 
         if (sortedScores.length === 0) {
             await interaction.reply('No high scores yet! Keep yapping to make the scoreboard! 🏆');
@@ -29,7 +29,7 @@ module.exports = {
             .map((user, index) => {
                 const medal = index < 3 ? medals[index] + ' ' : `${index + 1}. `;
                 const name = user.name;
-                return `${medal}${name}: ${user.highScore} yaps`;
+                return `${medal}${name}: ${user.highScore || user.yap} yaps`;
             })
             .join('\n');
 
