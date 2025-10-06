@@ -30,4 +30,4 @@ jobs:
           npm install
           
           # Restart the service using the sudo permission we granted
-          sudo pm2 restart moviePicker
+          pm2 restart moviePicker
