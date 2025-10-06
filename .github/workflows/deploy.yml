@@ -1,0 +1,23 @@
+name: Deploy Discord Bot to Raspberry Pi
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy to Raspberry Pi
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.RASPBERRY_PI_HOST }}
+          username: ${{ secrets.RASPBERRY_PI_USERNAME }}
+          key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
+          port: ${{ secrets.RASPBERRY_PI_PORT }}
+          script: |
+            cd ~/moviePicker
+            git pull origin main
+            npm install
+            pm2 restart app
