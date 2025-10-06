@@ -2,7 +2,6 @@ const fs = require("fs")
 const { NAMES } = require("./config");
 const { ironic } = require('ironicase');
 const dbName = './japIndex'
-const scoreboardDbName = './yapScoreboard'
 
 function getDb() {
     const exist = fs.existsSync(dbName)
@@ -12,26 +11,15 @@ function getDb() {
     return JSON.parse(fs.readFileSync(dbName))
 }
 
-function getScoreboardDb() {
-    const exist = fs.existsSync(scoreboardDbName)
-    if (!exist) {
-        return {}
-    }
-    return JSON.parse(fs.readFileSync(scoreboardDbName))
-}
-
-function updateScoreboard(userId, username, yapCount) {
-    const scoreboard = getScoreboardDb()
-    const currentHighScore = scoreboard[userId]?.highScore || 0
+async function updateScoreboard(userId, yapCount) {
+    const japIndex = getDb()
+    const currentHighScore = japIndex[userId]?.highScore || 0
     
     if (yapCount > currentHighScore) {
-        scoreboard[userId] = {
-            id: userId,
-            name: username,
-            highScore: yapCount
-        }
-        fs.writeFileSync(scoreboardDbName, JSON.stringify(scoreboard, null, 2))
+        japIndex[userId].highScore = yapCount
+        fs.writeFileSync(dbName, JSON.stringify(japIndex, null, 2))
     }
+    console.log(japIndex[userId])
 }
 
 function createDb(message) {
@@ -41,6 +29,7 @@ function createDb(message) {
             id: member.user.id,
             name: member.user.username,
             yap: 0,
+            highScore: 0,
         }
     });
     fs.writeFileSync(dbName, JSON.stringify(users, null, 2))
@@ -55,11 +44,12 @@ async function jap(message) {
             id: message.author.id,
             name: message.author.username,
             yap: 0,
+            highScore: 0,
         }
     }
     user.yap++
     const username = user.name.toLowerCase()
-    const isLink = message.content.includes('http')
+    const isLink = message.content.includes('http' || 'www')
     const isForwarded = message.messageSnapshots && message.messageSnapshots.size > 0
 
     if (Math.random() < user.yap / 2000 && !isLink && !isForwarded) {
@@ -87,8 +77,11 @@ async function jap(message) {
         }
         
         // Update scoreboard with the yap count before resetting
-        updateScoreboard(user.id, user.name, user.yap);
+        await updateScoreboard(user.id, user.yap);
         
+        // Re-read the database to get the updated highScore
+        const updatedJapIndex = getDb();
+        user = updatedJapIndex[user.id];
         user.yap = 0
     }
     japIndex[user.id] = user
@@ -96,4 +89,4 @@ async function jap(message) {
     return;
 }
 
-module.exports = { jap, getDb, getScoreboardDb };
+module.exports = { jap, getDb };
