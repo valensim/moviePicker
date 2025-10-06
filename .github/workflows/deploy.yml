@@ -30,4 +30,4 @@ jobs:
           npm install
           
           # Restart the service using the sudo permission we granted
-          sudo systemctl restart discord-bot.service
+          sudo pm2 restart moviePicker
