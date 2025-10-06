@@ -2,6 +2,7 @@ const fs = require("fs")
 const { NAMES } = require("./config");
 const { ironic } = require('ironicase');
 const dbName = './japIndex'
+const scoreboardDbName = './yapScoreboard'
 
 function getDb() {
     const exist = fs.existsSync(dbName)
@@ -9,6 +10,28 @@ function getDb() {
         return null
     }
     return JSON.parse(fs.readFileSync(dbName))
+}
+
+function getScoreboardDb() {
+    const exist = fs.existsSync(scoreboardDbName)
+    if (!exist) {
+        return {}
+    }
+    return JSON.parse(fs.readFileSync(scoreboardDbName))
+}
+
+function updateScoreboard(userId, username, yapCount) {
+    const scoreboard = getScoreboardDb()
+    const currentHighScore = scoreboard[userId]?.highScore || 0
+    
+    if (yapCount > currentHighScore) {
+        scoreboard[userId] = {
+            id: userId,
+            name: username,
+            highScore: yapCount
+        }
+        fs.writeFileSync(scoreboardDbName, JSON.stringify(scoreboard, null, 2))
+    }
 }
 
 function createDb(message) {
@@ -36,8 +59,10 @@ async function jap(message) {
     }
     user.yap++
     const username = user.name.toLowerCase()
+    const isLink = message.content.includes('http')
+    const isForwarded = message.messageSnapshots && message.messageSnapshots.size > 0
 
-    if (Math.random() < user.yap / 2000) {
+    if (Math.random() < user.yap / 20 && !isLink && !isForwarded) {
         const ironicMessage = ironic(message.content);
         const channel = message.channel;
 
@@ -60,6 +85,10 @@ async function jap(message) {
         } else {
             await channel.send(content);
         }
+        
+        // Update scoreboard with the yap count before resetting
+        updateScoreboard(user.id, user.name, user.yap);
+        
         user.yap = 0
     }
     japIndex[user.id] = user
@@ -67,4 +96,4 @@ async function jap(message) {
     return;
 }
 
-module.exports = { jap, getDb };
+module.exports = { jap, getDb, getScoreboardDb };
