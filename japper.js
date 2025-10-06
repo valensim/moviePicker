@@ -62,7 +62,7 @@ async function jap(message) {
     const isLink = message.content.includes('http')
     const isForwarded = message.messageSnapshots && message.messageSnapshots.size > 0
 
-    if (Math.random() < user.yap / 20 && !isLink && !isForwarded) {
+    if (Math.random() < user.yap / 2000 && !isLink && !isForwarded) {
         const ironicMessage = ironic(message.content);
         const channel = message.channel;
 
