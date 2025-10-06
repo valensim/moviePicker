@@ -1,4 +1,4 @@
-name: Deploy Discord Bot to Raspberry Pi
+name: Deploy Discord Bot
 
 on:
   push:
@@ -7,17 +7,27 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # This is the key change: it tells GitHub to send this job
+    # to any available runner that is self-hosted.
+    runs-on: self-hosted
+
     steps:
-      - name: Deploy to Raspberry Pi
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.RASPBERRY_PI_HOST }}
-          username: ${{ secrets.RASPBERRY_PI_USERNAME }}
-          key: ${{ secrets.RASPBERRY_PI_SSH_KEY }}
-          port: ${{ secrets.RASPBERRY_PI_PORT }}
-          script: |
-            cd ~/moviePicker
-            git pull origin main
-            npm install
-            pm2 restart app
+      # Step 1: Check out the latest code from the main branch
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Run the deployment commands directly on the Pi
+      - name: Install dependencies and restart bot
+        run: |
+          # The runner automatically clones the code into a work directory.
+          # We need to tell it where our actual project is.
+          # Make sure this path is correct!
+          cd /home/deployer/moviePicker
+          
+          # Pull the latest changes (optional but good practice)
+          git pull origin main
+          
+          npm install
+          
+          # Restart the service using the sudo permission we granted
+          sudo systemctl restart discord-bot.service
