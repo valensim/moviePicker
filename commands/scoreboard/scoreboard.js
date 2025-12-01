@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { getDb } = require('../../japper');
+const { NAMES } = require('../../config');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -25,10 +26,11 @@ module.exports = {
 
         // Format the scoreboard with medals for top 3
         const medals = ['🥇', '🥈', '🥉'];
+        const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
         const scoreboardText = sortedScores
             .map((user, index) => {
                 const medal = index < 3 ? medals[index] + ' ' : `${index + 1}. `;
-                const name = user.name;
+                const name = name;
                 return `${medal}${name}: ${user.highScore || user.yap} yaps`;
             })
             .join('\n');
