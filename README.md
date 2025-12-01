@@ -43,3 +43,4 @@ You will need a `.env` file with the following environment variables:
 - `/back-fill`: Backfills the backlog with movies.
 - `/stop-the-vote`: Stops the vote and calculates the top movies.
 - `/jap-count`: Returns current jap count per user.
+- `/scoreboard`: Returns the leadebord of max japs per user.

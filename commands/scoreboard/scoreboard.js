@@ -3,13 +3,13 @@ const { getDb } = require('../../japper');
 const { NAMES } = require('../../config');
 
 module.exports = {
-	data: new SlashCommandBuilder()
-		.setName('scoreboard')
-		.setDescription('Shows the highest yap counts before getting japped'),
-	async execute(interaction) {
+    data: new SlashCommandBuilder()
+        .setName('scoreboard')
+        .setDescription('Shows the highest yap counts before getting japped'),
+    async execute(interaction) {
         const scoreboard = getDb();
-        
-        if (Object.keys(scoreboard).length === 0) {
+
+        if (!scoreboard || Object.keys(scoreboard).length === 0) {
             await interaction.reply('No high scores yet! Keep yapping to make the scoreboard! 🏆');
             return;
         }
@@ -26,17 +26,16 @@ module.exports = {
 
         // Format the scoreboard with medals for top 3
         const medals = ['🥇', '🥈', '🥉'];
-        const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
         const scoreboardText = sortedScores
             .map((user, index) => {
                 const medal = index < 3 ? medals[index] + ' ' : `${index + 1}. `;
-                const name = name;
+                const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
                 return `${medal}${name}: ${user.highScore || user.yap} yaps`;
             })
             .join('\n');
 
         await interaction.reply('🏆 **Yap Scoreboard** 🏆\n\n' + scoreboardText);
         return;
-	}
+    }
 };
 

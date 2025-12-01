@@ -14,7 +14,7 @@ function getDb() {
 async function updateScoreboard(userId, yapCount) {
     const japIndex = getDb()
     const currentHighScore = japIndex[userId]?.highScore || 0
-    
+
     if (yapCount > currentHighScore) {
         japIndex[userId].highScore = yapCount
         fs.writeFileSync(dbName, JSON.stringify(japIndex, null, 2))
@@ -75,10 +75,10 @@ async function jap(message) {
         } else {
             await channel.send(content);
         }
-        
+
         // Update scoreboard with the yap count before resetting
         await updateScoreboard(user.id, user.yap);
-        
+
         // Re-read the database to get the updated highScore
         const updatedJapIndex = getDb();
         user = updatedJapIndex[user.id];
