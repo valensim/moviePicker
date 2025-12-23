@@ -9,6 +9,9 @@ const {
   GatewayIntentBits,
 } = require("discord.js");
 const { jap } = require("./japper");
+const { countdown } = require("./countdown");
+
+let countdownCounter = 0;
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -94,6 +97,10 @@ client.on(Events.MessageCreate, async (message) => {
 
   const username = message.author.username.toLowerCase();
 
+  if (username === 'moviePicker') return;
+
+  if (username === 'kajus0696' && countdownCounter < 30) countdown(message, '2026-10-06');
+  countdownCounter++;
   jap(message);
 
   return;
