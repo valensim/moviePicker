@@ -44,3 +44,5 @@ You will need a `.env` file with the following environment variables:
 - `/stop-the-vote`: Stops the vote and calculates the top movies.
 - `/jap-count`: Returns current jap count per user.
 - `/scoreboard`: Returns the leadebord of max japs per user.
+
+moje malina stale umira
