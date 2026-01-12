@@ -2,12 +2,7 @@ require("dotenv").config(); //This will be used to store private keys
 const path = require("path");
 const fs = require("fs");
 const deployCommands = require("./deploy/deployCommands");
-const {
-  Client,
-  Collection,
-  Events,
-  GatewayIntentBits,
-} = require("discord.js");
+const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const { jap } = require("./japper");
 const { countdown } = require("./countdown");
 
@@ -84,23 +79,26 @@ client.on(Events.InteractionCreate, async (interaction) => {
   }
 });
 
-
 client.on(Events.MessageCreate, async (message) => {
   // Ignore messages from bots (including itself)
   if (message.author.bot) return;
 
   // Check if message contains images (attachments or embeds with images)
-  const hasImages = message.attachments.size > 0 || 
-                   message.embeds.some(embed => embed.image || embed.thumbnail);
+  const hasImages =
+    message.attachments.size > 0 ||
+    message.embeds.some((embed) => embed.image || embed.thumbnail);
 
   if (hasImages) return;
 
   const username = message.author.username.toLowerCase();
 
-  if (username === 'moviePicker') return;
+  if (username === "moviePicker") return;
 
-  if (username === 'kajus0696' && countdownCounter < 30) countdown(message, '2026-10-06');
-  countdownCounter++;
+  if (username === "kajus0696" && countdownCounter < 30) {
+    countdown(message, "2026-10-06");
+    countdownCounter++;
+  }
+
   jap(message);
 
   return;
