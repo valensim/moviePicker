@@ -5,6 +5,7 @@ const deployCommands = require("./deploy/deployCommands");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const { jap } = require("./japper");
 const { countdown } = require("./countdown");
+const { trackMessage, trackReaction } = require("./emoteTracker");
 
 let countdownCounter = 0;
 
@@ -99,9 +100,26 @@ client.on(Events.MessageCreate, async (message) => {
     countdownCounter++;
   }
 
+  trackMessage(message);
   jap(message);
 
   return;
+});
+
+client.on(Events.MessageReactionAdd, async (reaction, user) => {
+  if (user.bot) return;
+
+  // Fetch partial reactions (reactions on old/uncached messages)
+  if (reaction.partial) {
+    try {
+      await reaction.fetch();
+    } catch (error) {
+      console.error("Failed to fetch reaction:", error);
+      return;
+    }
+  }
+
+  trackReaction(reaction);
 });
 
 client.login(BOT_TOKEN);
