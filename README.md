@@ -1,5 +1,6 @@
 # Movie Night Discord Bot
 
+
 This Discord bot helps make the process of deciding what movie to watch with friends just a tiny bit easier.
 
 Forked from [Original Repository](https://github.com/dhavdc/DiscordBotTemplate.git)
