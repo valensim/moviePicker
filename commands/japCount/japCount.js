@@ -8,7 +8,7 @@ function transformUser(user) {
     }
     const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
     const caught = user.caught ?? 0;
-    return `${name}: ${user.yap} yaps - caught ${caught} times`;
+    return `${name}: ${user.yap} japů - uvařen ${caught}-krát`;
 }
 
 module.exports = {
