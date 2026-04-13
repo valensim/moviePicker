@@ -7,18 +7,19 @@ function transformUser(user) {
         return;
     }
     const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
-    return `${name}: ${user.yap}`;
+    const caught = user.caught ?? 0;
+    return `${name}: caught ${caught} (${user.yap} yap)`;
 }
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName('jap-count')
-		.setDescription('returns the number of japs for each person'),
+		.setDescription('Times each person was japped and their current yap streak'),
 	async execute(interaction) {
 
         const japIndex = getDb();
         console.log(japIndex);
-        const japCount = Object.values(japIndex).map(transformUser);
+        const japCount = Object.values(japIndex).map(transformUser).filter(Boolean);
 
         interaction.reply(japCount.join('\n'));
 

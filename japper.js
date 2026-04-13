@@ -30,6 +30,7 @@ function createDb(message) {
             name: member.user.username,
             yap: 0,
             highScore: 0,
+            caught: 0,
         }
     });
     fs.writeFileSync(dbName, JSON.stringify(users, null, 2))
@@ -45,6 +46,7 @@ async function jap(message) {
             name: message.author.username,
             yap: 0,
             highScore: 0,
+            caught: 0,
         }
     }
     user.yap++
@@ -82,6 +84,7 @@ async function jap(message) {
         // Re-read the database to get the updated highScore
         const updatedJapIndex = getDb();
         user = updatedJapIndex[user.id];
+        user.caught = (user.caught || 0) + 1;
         user.yap = 0
     }
     japIndex[user.id] = user
