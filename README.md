@@ -46,4 +46,4 @@ You will need a `.env` file with the following environment variables:
 - `/jap-count`: Returns current jap count per user.
 - `/scoreboard`: Returns the leadebord of max japs per user.
 
-moje malina stale umira
+moje malina stale umiraaaa
