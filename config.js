@@ -14,9 +14,9 @@ module.exports = {
     ],
     jory4619: ["nEkAmArAd", "the Rudler"],
     airsaltychips: ["Zdena", "ekonomicky efektivni cyklista"],
-    johnythered: ["Anan"],
+    johnythered: ["Anan", "CEO pracaku", "Final Boss Nezamestnanosti"],
     almorus: ["sestka enjoyer"],
     a_n_e_z_k_a_29909: ["soulless"],
+    salormon: ["Vegan Daddy"],
   },
 };
-
