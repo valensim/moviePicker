@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getDb } = require('../../japper');
+const { getDb } = require('../../utils');
+const { DB_NAMES } = require('../../config');
 const { NAMES } = require('../../config');
 
 function transformUser(user) {
@@ -17,7 +18,7 @@ module.exports = {
 		.setDescription('Times each person was japped and their current yap streak'),
 	async execute(interaction) {
 
-        const japIndex = getDb();
+        const japIndex = getDb(DB_NAMES.JAP_INDEX);
         console.log(japIndex);
         const japCount = Object.values(japIndex).map(transformUser).filter(Boolean);
 

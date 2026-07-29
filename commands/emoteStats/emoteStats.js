@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { getDb } = require("../../emoteTracker");
+const { getDb } = require("../../utils");
+const { DB_NAMES } = require("../../config");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -14,7 +15,7 @@ module.exports = {
         ),
     async execute(interaction) {
         const limit = interaction.options.getInteger("limit") ?? 10;
-        const db = getDb();
+        const db = getDb(DB_NAMES.EMOTE_INDEX);
 
         if (!db || Object.keys(db).length === 0) {
             await interaction.reply("No emote data yet! Start using some emotes!");

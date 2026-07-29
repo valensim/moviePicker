@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require("discord.js");
-const { getDb } = require("../../emoteTracker");
+const { getDb } = require("../../utils");
+const { DB_NAMES } = require("../../config");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -15,7 +16,7 @@ module.exports = {
     async execute(interaction) {
         await interaction.deferReply();
 
-        const db = getDb();
+        const db = getDb(DB_NAMES.EMOTE_INDEX);
         const guildEmojis = await interaction.guild.emojis.fetch();
         const guildEmojiIds = new Set(guildEmojis.map((e) => e.id));
 

@@ -1,17 +1,13 @@
 const fs = require("fs");
-
-const DB_NAME = "./emoteIndex";
+const { getDb } = require("./utils")
+const { DB_NAMES } = require("./config");
 
 const CUSTOM_EMOTE_REGEX = /<(a?):(\w+):(\d+)>/g;
 const UNICODE_EMOJI_REGEX = /\p{Emoji_Presentation}/gu;
 
-function getDb() {
-    if (!fs.existsSync(DB_NAME)) return {};
-    return JSON.parse(fs.readFileSync(DB_NAME, "utf8"));
-}
 
 function saveDb(data) {
-    fs.writeFileSync(DB_NAME, JSON.stringify(data, null, 2));
+    fs.writeFileSync(DB_NAMES.EMOTE_INDEX, JSON.stringify(data, null, 2));
 }
 
 function increment(db, key, name, isCustom, isAnimated) {
@@ -25,7 +21,7 @@ function trackMessage(message) {
     const content = message.content;
     if (!content) return;
 
-    const db = getDb();
+    const db = getDb(DB_NAMES.EMOTE_INDEX);
 
     for (const match of content.matchAll(CUSTOM_EMOTE_REGEX)) {
         const isAnimated = match[1] === "a";
@@ -42,7 +38,7 @@ function trackMessage(message) {
 }
 
 function trackReaction(reaction) {
-    const db = getDb();
+    const db = getDb(DB_NAMES.EMOTE_INDEX);
     const { emoji } = reaction;
 
     if (emoji.id) {
@@ -54,4 +50,4 @@ function trackReaction(reaction) {
     saveDb(db);
 }
 
-module.exports = { trackMessage, trackReaction, getDb: () => getDb() };
+module.exports = { trackMessage, trackReaction };

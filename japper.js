@@ -1,23 +1,16 @@
 const fs = require("fs")
 const { NAMES } = require("./config");
 const { ironic } = require('ironicase');
-const dbName = './japIndex'
-
-function getDb() {
-    const exist = fs.existsSync(dbName)
-    if (!exist) {
-        return null
-    }
-    return JSON.parse(fs.readFileSync(dbName))
-}
+const { DB_NAMES } = require("./config");
+const { getDb } = require("./utils")
 
 async function updateScoreboard(userId, yapCount) {
-    const japIndex = getDb()
+    const japIndex = getDb(DB_NAMES.JAP_INDEX);
     const currentHighScore = japIndex[userId]?.highScore || 0
 
     if (yapCount > currentHighScore) {
         japIndex[userId].highScore = yapCount
-        fs.writeFileSync(dbName, JSON.stringify(japIndex, null, 2))
+        fs.writeFileSync(DB_NAMES.JAP_INDEX, JSON.stringify(japIndex, null, 2))
     }
     console.log(japIndex[userId])
 }
@@ -33,12 +26,12 @@ function createDb(message) {
             caught: 0,
         }
     });
-    fs.writeFileSync(dbName, JSON.stringify(users, null, 2))
+    fs.writeFileSync(DB_NAMES.JAP_INDEX, JSON.stringify(users, null, 2))
     return users;
 }
 
 async function jap(message) {
-    const japIndex = getDb() || createDb(message)
+    const japIndex = getDb(DB_NAMES.JAP_INDEX) || createDb(message)
     let user = japIndex[message.author.id]
     if (!user) {
         user = {
@@ -82,14 +75,14 @@ async function jap(message) {
         await updateScoreboard(user.id, user.yap);
 
         // Re-read the database to get the updated highScore
-        const updatedJapIndex = getDb();
+        const updatedJapIndex = getDb(DB_NAMES.JAP_INDEX);
         user = updatedJapIndex[user.id];
         user.caught = (user.caught || 0) + 1;
         user.yap = 0
     }
     japIndex[user.id] = user
-    fs.writeFileSync(dbName, JSON.stringify(japIndex, null, 2))
+    fs.writeFileSync(DB_NAMES.JAP_INDEX, JSON.stringify(japIndex, null, 2))
     return;
 }
 
-module.exports = { jap, getDb };
+module.exports = { jap };

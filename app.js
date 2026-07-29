@@ -5,6 +5,7 @@ const deployCommands = require("./deploy/deployCommands");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const { jap } = require("./japper");
 const { trackMessage, trackReaction } = require("./emoteTracker");
+const { johnyCountdown } = require("./countdown");
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
@@ -88,12 +89,10 @@ client.on(Events.MessageCreate, async (message) => {
 
   if (hasImages) return;
 
-  const username = message.author.username.toLowerCase();
-
-  if (username === "moviePicker") return;
-
   trackMessage(message);
   jap(message);
+  // Making fun of our unemployed friend
+  timeUntilReply(message, "johnythered");
 
   return;
 });

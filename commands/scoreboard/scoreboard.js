@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('discord.js');
-const { getDb } = require('../../japper');
+const { getDb } = require('../../utils');
+const { DB_NAMES } = require('../../config');
 const { NAMES } = require('../../config');
 
 module.exports = {
@@ -7,7 +8,7 @@ module.exports = {
         .setName('scoreboard')
         .setDescription('Shows the highest yap counts before getting japped'),
     async execute(interaction) {
-        const scoreboard = getDb();
+        const scoreboard = getDb(DB_NAMES.JAP_INDEX);
 
         if (!scoreboard || Object.keys(scoreboard).length === 0) {
             await interaction.reply('No high scores yet! Keep yapping to make the scoreboard! 🏆');

@@ -1,5 +1,10 @@
 // Move these to a config file later
 module.exports = {
+  DB_NAMES: {
+    EMOTE_INDEX: "./emoteIndex",
+    JAP_INDEX: "./japIndex",
+    TIME_UNTIL_REPLY: "./timeUntilReply",
+  },
   CHANNELS: {
     SCREENING: "screening",
     WATCHLIST: "watch-list",
