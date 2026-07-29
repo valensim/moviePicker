@@ -30,6 +30,14 @@ module.exports = {
         return;
       }
 
+      // Check if movie is already in watchlist
+      const watchlistMessages = await watchlist.messages.fetch({ limit: 1000 });
+      const movieMessage = watchlistMessages.find(msg => msg.embeds[0].description.includes(info.Title));
+      if (movieMessage) {
+        await interaction.editReply(`Movie already in watchlist: ${movieMessage.url}`);
+        return;
+      }
+
       const imdbLink = `https://www.imdb.com/title/${info.imdbID || "not found"}`;
       const msg = `**${info.Title || "not found"}** (${info.Year || "not found"})\n[IMDB](${imdbLink}) Rating: ${info.imdbRating || "not found"}\n${info.Runtime || "not found"}\n${info.Plot || "not found"}`;
       const embed = new EmbedBuilder()
