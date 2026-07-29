@@ -12,7 +12,6 @@ async function updateScoreboard(userId, yapCount) {
         japIndex[userId].highScore = yapCount
         fs.writeFileSync(DB_NAMES.JAP_INDEX, JSON.stringify(japIndex, null, 2))
     }
-    console.log(japIndex[userId])
 }
 
 function createDb(message) {

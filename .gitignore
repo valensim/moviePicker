@@ -1,5 +1,6 @@
 node_modules
 japIndex
 emoteIndex
+timeUntilReply
 .env
 package-lock.json

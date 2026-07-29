@@ -21,7 +21,7 @@ function trackMessage(message) {
     const content = message.content;
     if (!content) return;
 
-    const db = getDb(DB_NAMES.EMOTE_INDEX);
+    const db = getDb(DB_NAMES.EMOTE_INDEX) || {};
 
     for (const match of content.matchAll(CUSTOM_EMOTE_REGEX)) {
         const isAnimated = match[1] === "a";
@@ -38,7 +38,7 @@ function trackMessage(message) {
 }
 
 function trackReaction(reaction) {
-    const db = getDb(DB_NAMES.EMOTE_INDEX);
+    const db = getDb(DB_NAMES.EMOTE_INDEX) || {};
     const { emoji } = reaction;
 
     if (emoji.id) {

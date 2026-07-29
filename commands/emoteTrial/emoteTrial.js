@@ -17,6 +17,10 @@ module.exports = {
         await interaction.deferReply();
 
         const db = getDb(DB_NAMES.EMOTE_INDEX);
+        if (!db || Object.keys(db).length === 0) {
+            await interaction.reply("No emote data yet! Start using some emotes!");
+            return;
+        }
         const guildEmojis = await interaction.guild.emojis.fetch();
         const guildEmojiIds = new Set(guildEmojis.map((e) => e.id));
 

@@ -5,7 +5,7 @@ const deployCommands = require("./deploy/deployCommands");
 const { Client, Collection, Events, GatewayIntentBits } = require("discord.js");
 const { jap } = require("./japper");
 const { trackMessage, trackReaction } = require("./emoteTracker");
-const { johnyCountdown } = require("./countdown");
+const { timeUntilReply } = require("./countdown");
 
 const BOT_TOKEN = process.env.CLIENT_TOKEN;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
