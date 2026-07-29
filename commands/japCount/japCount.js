@@ -1,15 +1,15 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { getDb } = require('../../utils');
 const { DB_NAMES } = require('../../config');
-const { NAMES } = require('../../config');
+const { getYapNickname } = require('../../utils');
 
 function transformUser(user) {
     if (user.name === 'moviePicker') {
         return;
     }
-    const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
+    const yapNickname = getYapNickname(user.name);
     const caught = user.caught ?? 0;
-    return `${name}: ${user.yap} japů - uvařen ${caught}-krát`;
+    return `${yapNickname}: ${user.yap} japů - uvařen ${caught}-krát`;
 }
 
 module.exports = {

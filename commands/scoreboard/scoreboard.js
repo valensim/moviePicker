@@ -1,7 +1,7 @@
 const { SlashCommandBuilder } = require('discord.js');
 const { getDb } = require('../../utils');
 const { DB_NAMES } = require('../../config');
-const { NAMES } = require('../../config');
+const { getYapNickname } = require('../../utils');
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -30,8 +30,8 @@ module.exports = {
         const scoreboardText = sortedScores
             .map((user, index) => {
                 const medal = index < 3 ? medals[index] + ' ' : `${index + 1}. `;
-                const name = NAMES[user.name] ? NAMES[user.name][Math.floor(Math.random() * NAMES[user.name].length)] : user.name;
-                return `${medal}${name}: ${user.highScore || user.yap} yaps`;
+                const yapNickname = getYapNickname(user.name);
+                return `${medal}${yapNickname}: ${user.highScore || user.yap} yaps`;
             })
             .join('\n');
 

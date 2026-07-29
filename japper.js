@@ -1,8 +1,7 @@
 const fs = require("fs")
-const { NAMES } = require("./config");
 const { ironic } = require('ironicase');
 const { DB_NAMES } = require("./config");
-const { getDb } = require("./utils")
+const { getDb, getYapNickname } = require("./utils")
 
 async function updateScoreboard(userId, yapCount) {
     const japIndex = getDb(DB_NAMES.JAP_INDEX);
@@ -61,8 +60,8 @@ async function jap(message) {
         }
 
         await message.delete();
-        const name = NAMES[username] ? NAMES[username][Math.floor(Math.random() * NAMES[username].length)] : username
-        const content = name + ' tried to yap: \n' + ironicMessage + '\n' + 'it took ' + user.yap + ' yaps';
+        const yapNickname = getYapNickname(username)
+        const content = yapNickname + ' tried to yap: \n' + ironicMessage + '\n' + 'it took ' + user.yap + ' yaps';
 
         if (replyToMessage) {
             await replyToMessage.reply(content);

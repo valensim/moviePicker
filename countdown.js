@@ -1,4 +1,4 @@
-const { getDb } = require("./utils");
+const { getDb, getYapNickname } = require("./utils");
 const { DB_NAMES } = require("./config");
 const fs = require("fs");
 
@@ -21,7 +21,8 @@ async function timeUntilReply(message, username) {
             return;
         }
         const timeBetween = await timeBetweenFormated(timeUntilReplyDb[username], new Date());
-        await message.reply(`Yep ${username} is still alive it took just ${timeBetween}.`);
+        const yapNickname = getYapNickname(username);
+        await message.reply(`Yep ${yapNickname} is still alive it took just ${timeBetween}.`);
         timeUntilReplyDb[username] = null;
     }
     else {
