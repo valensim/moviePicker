@@ -31,7 +31,7 @@ module.exports = {
       }
 
       // Check if movie is already in watchlist
-      const watchlistMessages = await watchlist.messages.fetch({ limit: 1000 });
+      const watchlistMessages = await watchlist.messages.fetch({ limit: 100 });
       const movieMessage = watchlistMessages.find(msg => msg.embeds[0].description.includes(info.Title));
       if (movieMessage) {
         await interaction.editReply(`Movie already in watchlist: ${movieMessage.url}`);
