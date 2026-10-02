@@ -4,6 +4,7 @@ module.exports = {
     EMOTE_INDEX: "./emoteIndex",
     JAP_INDEX: "./japIndex",
     TIME_UNTIL_REPLY: "./timeUntilReply",
+    ASCII_INDEX: "./asciiIndex",
   },
   CHANNELS: {
     SCREENING: "screening",

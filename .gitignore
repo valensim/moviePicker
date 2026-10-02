@@ -2,5 +2,6 @@ node_modules
 japIndex
 emoteIndex
 timeUntilReply
+asciiIndex
 .env
 package-lock.json
