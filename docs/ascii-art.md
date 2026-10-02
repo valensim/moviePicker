@@ -9,7 +9,7 @@ Use `/ascii-save`.
 - **name**: a short name, such as `cat` or `my cat`. Letters, numbers, and hyphens only. Up to 32 characters. Spaces turn into hyphens, so `My Cat` is stored as `my-cat`.
 - **image**: a PNG, JPG, or GIF under 8 MB.
 
-The bot shrinks the picture to the largest size that still fits in one Discord message (about 60 characters wide), turns brightness into characters, and stores the text in a file called `asciiIndex`. It does not keep the original picture. A GIF uses only the first frame. Pictures saved before this size change stay small until you save them again.
+The bot matches the picture's shape. A tall photo stays tall, and a wide photo stays wide. It still fits in one Discord message. Phone photos that were stored sideways are turned upright. It does not keep the original picture. A GIF uses only the first frame. Pictures saved before this change keep their old shape until you save them again.
 
 Saving the same name again replaces the old art.
 

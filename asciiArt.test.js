@@ -34,10 +34,25 @@ describe("fitSize", () => {
     assert.equal(rows, 31);
   });
 
-  it("shrinks a tall image by width so the row cap still holds", () => {
+  it("makes a portrait photo taller and narrower than a landscape photo", () => {
+    const portrait = fitSize(1080, 1920);
+    const landscape = fitSize(1920, 1080);
+
+    assert.ok(portrait.rows > landscape.rows);
+    assert.ok(portrait.cols < landscape.cols);
+    assert.ok(portrait.rows > 31);
+
+    for (const size of [portrait, landscape]) {
+      const art = Array.from({ length: size.rows }, () => "x".repeat(size.cols)).join("\n");
+      const reply = formatReply("a".repeat(MAX_NAME_LENGTH), art);
+      assert.ok(reply.length <= DISCORD_MESSAGE_LIMIT);
+    }
+  });
+
+  it("lets a very tall image grow down instead of staying short and wide", () => {
     const { cols, rows } = fitSize(500, 4000);
-    assert.ok(cols < 62);
-    assert.equal(rows, 31);
+    assert.ok(rows > cols);
+    assert.ok(rows > 31);
   });
 });
 
@@ -72,6 +87,21 @@ describe("pixelsToAscii", () => {
   });
 });
 
+function exifOrientationSegment(orientation) {
+  const tiff = Buffer.from([
+    0x49, 0x49, 0x2a, 0x00, 0x08, 0x00, 0x00, 0x00, 0x01, 0x00, 0x12, 0x01, 0x03, 0x00,
+    0x01, 0x00, 0x00, 0x00, orientation, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+  ]);
+  const header = Buffer.from("Exif\0\0", "binary");
+  const body = Buffer.concat([header, tiff]);
+  const segment = Buffer.alloc(body.length + 4);
+  segment[0] = 0xff;
+  segment[1] = 0xe1;
+  segment.writeUInt16BE(body.length + 2, 2);
+  body.copy(segment, 4);
+  return segment;
+}
+
 describe("imageToAscii", () => {
   it("turns a black image into dark characters and a white image into spaces", async () => {
     const Jimp = require("jimp");
@@ -84,6 +114,24 @@ describe("imageToAscii", () => {
     assert.match(blackArt, /@/);
     assert.equal(whiteArt.trim(), "");
     assert.ok(formatReply("sample", blackArt).length <= DISCORD_MESSAGE_LIMIT);
+  });
+
+  it("turns a sideways phone jpeg into a taller picture", async () => {
+    const Jimp = require("jimp");
+    const wide = await new Jimp(80, 24, 0xffffffff).getBufferAsync(Jimp.MIME_JPEG);
+    const sideways = Buffer.concat([
+      wide.subarray(0, 2),
+      exifOrientationSegment(6),
+      wide.subarray(2),
+    ]);
+
+    const wideArt = await imageToAscii(wide);
+    const uprightArt = await imageToAscii(sideways);
+    const wideLines = wideArt.split("\n");
+    const uprightLines = uprightArt.split("\n");
+
+    assert.ok(uprightLines.length > wideLines.length);
+    assert.ok(uprightLines[0].length < wideLines[0].length);
   });
 });
 

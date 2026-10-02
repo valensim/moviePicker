@@ -4,8 +4,6 @@ const { getDb } = require("./utils");
 const { DB_NAMES } = require("./config");
 
 const RAMP = " .:-=+*#%@";
-const MAX_COLS = 62;
-const MAX_ROWS = 31;
 const CHAR_ASPECT = 0.5;
 const DISCORD_MESSAGE_LIMIT = 2000;
 const MAX_NAME_LENGTH = 32;
@@ -15,19 +13,25 @@ function normalizeName(name) {
   return String(name).trim().toLowerCase().replace(/\s+/g, "-");
 }
 
+function replyLength(cols, rows) {
+  const artLength = rows * cols + Math.max(0, rows - 1);
+  const overhead = formatReply("x".repeat(MAX_NAME_LENGTH), "").length;
+  return overhead + artLength;
+}
+
 function fitSize(imgW, imgH) {
   if (imgW < 1 || imgH < 1) {
     throw new Error("Image has no pixels");
   }
 
-  let cols = MAX_COLS;
-  let rows = Math.max(1, Math.round(cols * (imgH / imgW) * CHAR_ASPECT));
-  if (rows > MAX_ROWS) {
-    rows = MAX_ROWS;
-    cols = Math.max(1, Math.round((rows * (imgW / imgH)) / CHAR_ASPECT));
+  const rowsPerCol = (imgH / imgW) * CHAR_ASPECT;
+  let best = { cols: 1, rows: 1 };
+  for (let cols = 1; cols <= DISCORD_MESSAGE_LIMIT; cols++) {
+    const rows = Math.max(1, Math.round(cols * rowsPerCol));
+    if (replyLength(cols, rows) > DISCORD_MESSAGE_LIMIT) break;
+    best = { cols, rows };
   }
-  if (cols > MAX_COLS) cols = MAX_COLS;
-  return { cols, rows };
+  return best;
 }
 
 function charForPixel({ r, g, b, a = 255 }) {
