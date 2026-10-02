@@ -11,9 +11,17 @@ async function timeBetweenFormated(startDate, endDate) {
     return (`${days}d ${hours}h ${minutes}m ${seconds}s`).toString();
 }
 
+function isDirectMention(message, username) {
+    return message.mentions.users.some((user) => {
+        if (user.username !== username) return false;
+        // Reply pings are added to mentions.users without putting <@id> in the message text.
+        return new RegExp(`<@!?${user.id}>`).test(message.content);
+    });
+}
+
 async function timeUntilReply(message, username) {
     const timeUntilReplyDb = getDb(DB_NAMES.TIME_UNTIL_REPLY) || {};
-    if (message.mentions.users.some((user) => user.username === username)){
+    if (isDirectMention(message, username)) {
         timeUntilReplyDb[username] = new Date();
     }
     else if (message.author.username === username) {
@@ -35,4 +43,4 @@ async function timeUntilReply(message, username) {
     
 }
 
-module.exports = { timeBetweenFormated, timeUntilReply };
+module.exports = { timeBetweenFormated, timeUntilReply, isDirectMention };

@@ -4,7 +4,7 @@
   "description": "discord bot that picks a movie for you",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "node --test",
     "start": "node app.js"
   },
   "author": "Simon Valenta",
