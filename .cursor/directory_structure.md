@@ -12,8 +12,10 @@
 
 - `asciiArt.js` — Shrinks an image, maps brightness to characters, saves and loads named art.
 - `asciiArt.test.js` — Tests size caps, conversion, and the JSON store.
+- `asciiImage.js` — Draws saved ASCII art as a PNG with built-in bitmap glyphs.
+- `asciiImage.test.js` — Tests picture size, glyph shading order, and PNG output.
 - `commands/ascii/save.js` — `/ascii-save` downloads an attachment and stores the art.
-- `commands/ascii/show.js` — `/ascii` posts saved art by name.
+- `commands/ascii/show.js` — `/ascii` posts saved art by name as a PNG attachment.
 - `commands/ascii/list.js` — `/ascii-list` posts every saved name.
 - `docs/ascii-art.md` — How people use the ASCII commands.
 - `asciiIndex` — Created at runtime. Map of name to ASCII text. Gitignored.

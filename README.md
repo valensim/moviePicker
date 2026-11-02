@@ -46,7 +46,7 @@ You will need a `.env` file with the following environment variables:
 - `/jap-count`: Returns current jap count per user.
 - `/scoreboard`: Returns the leadebord of max japs per user.
 - `/ascii-save`: Turns an attached image into ASCII art and saves it under a name.
-- `/ascii`: Posts a saved ASCII art image by name.
+- `/ascii`: Posts a saved ASCII art image by name, drawn as a PNG so it looks the same on phone and desktop.
 - `/ascii-list`: Lists every saved ASCII art name. See `docs/ascii-art.md`.
 
 moje malina stale umiraaaaaaaaa I fucked shit up kinda afraid its gonna fucke something up real bad
