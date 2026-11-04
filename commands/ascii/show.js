@@ -1,5 +1,6 @@
-const { SlashCommandBuilder } = require("discord.js");
-const { getAscii, formatReply, normalizeName, NAME_PATTERN } = require("../../asciiArt");
+const { SlashCommandBuilder, AttachmentBuilder } = require("discord.js");
+const { getAscii, normalizeName, NAME_PATTERN } = require("../../asciiArt");
+const { asciiToPng } = require("../../asciiImage");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,6 +30,16 @@ module.exports = {
       return;
     }
 
-    await interaction.reply(formatReply(name, art));
+    await interaction.deferReply();
+    try {
+      const png = await asciiToPng(art);
+      await interaction.editReply({
+        content: `**${name}**`,
+        files: [new AttachmentBuilder(png, { name: `${name}.png` })],
+      });
+    } catch (error) {
+      console.error("ascii render failed:", error);
+      await interaction.editReply(`Could not draw \`${name}\` as a picture.`);
+    }
   },
 };

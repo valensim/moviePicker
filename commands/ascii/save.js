@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, AttachmentBuilder } = require("discord.js");
 const axios = require("axios");
 const {
   imageToAscii,
@@ -6,6 +6,7 @@ const {
   normalizeName,
   NAME_PATTERN,
 } = require("../../asciiArt");
+const { asciiToPng } = require("../../asciiImage");
 
 const MAX_BYTES = 8 * 1024 * 1024;
 
@@ -65,7 +66,11 @@ module.exports = {
       const art = await imageToAscii(Buffer.from(response.data));
       const saved = saveAscii(name, art);
       const verb = saved.replaced ? "Replaced" : "Saved";
-      await interaction.editReply(`${verb} \`${saved.name}\`. Show it with \`/ascii\`.`);
+      const png = await asciiToPng(art);
+      await interaction.editReply({
+        content: `${verb} \`${saved.name}\`. Show it with \`/ascii\`.`,
+        files: [new AttachmentBuilder(png, { name: `${saved.name}.png` })],
+      });
     } catch (error) {
       console.error("ascii-save failed:", error);
       await interaction.editReply(
